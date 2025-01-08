@@ -1,0 +1,38 @@
+---
+- name: Configure SSH
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    mode: '0600'
+  notify: restart sshd
+
+- name: Set up cron job for ansible-pull
+  cron:
+    name: "ansible-pull"
+    user: root
+    minute: "*/30"
+    job: >
+      ansible-pull -U <YOUR_REPO_URL> -C main
+      --directory /var/lib/ansible/local
+      --clean
+      --sleep {{ 59 | random }}
+      > /var/log/ansible-pull.log 2>&1
+
+- name: Create ansible local directory
+  file:
+    path: /var/lib/ansible/local
+    state: directory
+    mode: '0755'
+
+- name: Set up logrotate for ansible-pull logs
+  copy:
+    content: |
+      /var/log/ansible-pull.log {
+          rotate 7
+          daily
+          compress
+          missingok
+          notifempty
+      }
+    dest: /etc/logrotate.d/ansible-pull
+    mode: '0644'

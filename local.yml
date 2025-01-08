@@ -1,0 +1,61 @@
+---
+- name: Configure server using ansible-pull
+  hosts: localhost
+  connection: local
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+  roles:
+    - common
+    - security
+    - monitoring
+    - dev-tools
+
+  vars:
+    user_home: "{{ ansible_env.HOME }}"
+    rust_version: "stable"
+    node_version: "lts"
+
+  tasks:
+    - name: Ensure essential packages are installed
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - build-essential
+        - vim
+        - htop
+        - tmux
+        - git
+        - curl
+        - wget
+        - unzip
+        - net-tools
+        - ripgrep
+        - fd-find
+        - fzf
+
+    - name: Configure timezone
+      timezone:
+        name: UTC
+
+    - name: Set up automatic updates
+      apt:
+        name: unattended-upgrades
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Enable automatic updates
+      copy:
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Unattended-Upgrade "1";
+          APT::Periodic::AutocleanInterval "7";
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+      when: ansible_os_family == "Debian"
