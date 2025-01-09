@@ -13,8 +13,6 @@
 
   roles:
     - common
-    - security
-    - monitoring
     - dev-tools
 
   vars:
