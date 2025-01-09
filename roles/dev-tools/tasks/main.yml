@@ -29,29 +29,38 @@
     mode: '0755'
   become: false
 
+- name: Ensure Fish functions directory exists
+  file:
+    path: "{{ user_home }}/.config/fish/functions"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: Configure Fish auto ls function
+  template:
+    src: auto_ls.fish.j2
+    dest: "{{ user_home }}/.config/fish/functions/auto_ls.fish"
+    mode: '0644'
+  become: false
+
 - name: Configure Fish with Starship
-  copy:
+  template:
+    src: config.fish.j2
     dest: "{{ user_home }}/.config/fish/config.fish"
-    content: |
-      if status is-interactive
-          # Initialize Starship prompt
-          starship init fish | source
-          
-          # Custom aliases
-          alias vim='nvim'
-          alias ll='ls -la'
-          alias g='git'
-          
-          # Add cargo bin to PATH
-          set -x PATH $HOME/.cargo/bin $PATH
-          
-          # Set environment variables
-          set -x EDITOR nvim
-          set -x VISUAL nvim
-          
-          # Enable fzf key bindings
-          fzf_key_bindings
-      end
+    mode: '0644'
+  become: false
+
+- name: Create Starship config directory
+  file:
+    path: "{{ user_home }}/.config"
+    state: directory
+    mode: '0755'
+  become: false
+
+- name: Configure Starship
+  template:
+    src: starship.toml.j2
+    dest: "{{ user_home }}/.config/starship.toml"
     mode: '0644'
   become: false
 
@@ -132,86 +141,8 @@
   become: false
 
 - name: Configure Tmux
-  copy:
+  template:
+    src: tmux.conf.j2
     dest: "{{ user_home }}/.tmux.conf"
-    content: |
-      # Set prefix to Ctrl-a
-      unbind C-b
-      set -g prefix C-a
-      bind C-a send-prefix
-      
-      # Enable mouse support
-      set -g mouse on
-      
-      # Start windows and panes at 1, not 0
-      set -g base-index 1
-      setw -g pane-base-index 1
-      
-      # Use vi keys in copy mode
-      setw -g mode-keys vi
-      
-      # List of plugins
-      set -g @plugin 'tmux-plugins/tpm'
-      set -g @plugin 'tmux-plugins/tmux-sensible'
-      set -g @plugin 'tmux-plugins/tmux-resurrect'
-      set -g @plugin 'tmux-plugins/tmux-continuum'
-      set -g @plugin 'dracula/tmux'
-      set -g @plugin 'omerxx/tmux-floax'
-      set -g @plugin 'omerxx/tmux-sessionx'
-      
-      # Dracula theme settings
-      set -g @dracula-show-battery false
-      set -g @dracula-show-weather false
-      set -g @dracula-show-powerline true
-      
-      # Sessionx configuration
-      set -g @sessionx-bind 'o'
-      set -g @sessionx-x-path '~/projects'
-      set -g @sessionx-window-height '85%'
-      set -g @sessionx-window-width '75%'
-      set -g @sessionx-zoxide-mode 'on'
-      
-      # Floax configuration
-      set -g @floax-bind 'f'
-      set -g @floax-height '85%'
-      set -g @floax-width '75%'
-      
-      # Auto restore tmux
-      set -g @continuum-restore 'on'
-      
-      # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-      run '~/.tmux/plugins/tpm/tpm'
-    mode: '0644'
-  become: false
-
-- name: Create Starship config
-  copy:
-    dest: "{{ user_home }}/.config/starship.toml"
-    content: |
-      # Get editor completions based on the config schema
-      "$schema" = 'https://starship.rs/config-schema.json'
-
-      # Add a blank line between shell prompts
-      add_newline = true
-
-      # Replace the "❯" symbol with "➜"
-      [character]
-      success_symbol = "[➜](bold green)"
-      error_symbol = "[➜](bold red)"
-
-      [directory]
-      truncation_length = 8
-      truncate_to_repo = true
-
-      [git_branch]
-      symbol = "🌱 "
-      truncation_length = 4
-      truncation_symbol = ""
-
-      [rust]
-      symbol = "🦀 "
-
-      [nodejs]
-      symbol = "⬢ "
     mode: '0644'
   become: false

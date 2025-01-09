@@ -1,0 +1,25 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Add a blank line between shell prompts
+add_newline = true
+
+# Replace the "❯" symbol with "➜"
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+[directory]
+truncation_length = 8
+truncate_to_repo = true
+
+[git_branch]
+symbol = "🌱 "
+truncation_length = 4
+truncation_symbol = ""
+
+[rust]
+symbol = "🦀 "
+
+[nodejs]
+symbol = "⬢ "

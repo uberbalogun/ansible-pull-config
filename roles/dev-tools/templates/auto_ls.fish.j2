@@ -1,0 +1,6 @@
+function auto_ls --on-variable PWD
+    if status --is-command-substitution
+        return
+    end
+    ls
+end
