@@ -6,13 +6,55 @@
     mode: '0600'
   notify: restart sshd
 
+- name: Install fail2ban
+  package:
+    name: fail2ban
+    state: present
+
+- name: Create fail2ban jail.local
+  template:
+    src: jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    mode: '0644'
+  notify: restart fail2ban
+
+- name: Ensure fail2ban is running and enabled
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
+
+- name: Install UFW
+  package:
+    name: ufw
+    state: present
+
+- name: Set UFW default policies
+  ufw:
+    direction: "{{ item.direction }}"
+    policy: "{{ item.policy }}"
+  with_items:
+    - { direction: 'incoming', policy: 'deny' }
+    - { direction: 'outgoing', policy: 'allow' }
+
+- name: Allow SSH through UFW
+  ufw:
+    rule: allow
+    port: ssh
+    proto: tcp
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    logging: on
+
 - name: Set up cron job for ansible-pull
   cron:
     name: "ansible-pull"
     user: root
     minute: "*/30"
     job: >
-      ansible-pull -U <YOUR_REPO_URL> -C main
+      ansible-pull -U https://github.com/uberbalogun/ansible-pull-config.git -C main
       --directory /var/lib/ansible/local
       --clean
       --sleep {{ 59 | random }}
