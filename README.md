@@ -52,6 +52,16 @@ ansible-pull -U <YOUR_REPO_URL> -C main
 ### Neovim
 The Neovim configuration comes from [nvim-rust](https://github.com/uberbalogun/nvim-rust). Refer to that repository for detailed keybindings and features.
 
+Key features include:
+- Full Rust development environment with rust-analyzer
+- Debug support with codelldb
+- Code completion with nvim-cmp
+- Git integration
+- Smart code folding with nvim-ufo
+  - `<space>ft` - Toggle code folding
+  - Automatic fold detection using treesitter
+  - Visual fold column indicator
+
 ### Tmux
 
 #### Basic Commands
