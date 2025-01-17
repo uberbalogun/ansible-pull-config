@@ -1,0 +1,12 @@
+# Basic Fish shell initialization for tmux
+if status is-interactive
+    # Set basic prompt if starship isn't available
+    if not command -v starship >/dev/null
+        function fish_prompt
+            echo (pwd) '> '
+        end
+    end
+end
+
+# Ensure path is set
+set -x PATH $PATH /usr/local/bin /usr/bin /bin
