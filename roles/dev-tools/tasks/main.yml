@@ -155,6 +155,20 @@
     depth: 1
   become: false
 
+- name: Install tmux-resurrect
+  git:
+    repo: https://github.com/tmux-plugins/tmux-resurrect
+    dest: "{{ user_home }}/.tmux/plugins/tmux-resurrect"
+    depth: 1
+  become: false
+
+- name: Install tmux-continuum
+  git:
+    repo: https://github.com/tmux-plugins/tmux-continuum
+    dest: "{{ user_home }}/.tmux/plugins/tmux-continuum"
+    depth: 1
+  become: false
+
 - name: Configure tmux
   template:
     src: tmux.conf.j2
