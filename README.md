@@ -1,6 +1,13 @@
 # Ansible Pull Configuration
 
-This repository contains Ansible configuration for automatic server provisioning using ansible-pull. It sets up a complete development environment with Fish shell, Rust, Neovim, Tmux, and other development tools.
+This repository sets up a Rust development environment with Fish shell, Rust, Neovim, Tmux, and more, optimized for Linode shared-CPU servers and higher-spec AWS Ubuntu/Debian instances.
+
+## System Requirements
+- **OS**: Ubuntu or Debian
+- **Minimum Specs**:
+  - Linode: 1GB RAM, 25GB storage (tested and recommended)
+  - AWS: 2GB RAM, 20GB storage (e.g., t3.small or better) for reliable performance
+- **Network**: Open outbound access for repo and tool downloads
 
 ## Quick Start
 
@@ -12,6 +19,14 @@ apt-get update && apt-get install -y ansible git
 
 # Run ansible-pull (replace with your repo URL)
 ansible-pull -U <YOUR_REPO_URL> -C main
+```
+
+
+## Quick Start
+On a fresh Linode or AWS Ubuntu/Debian server:
+```bash
+apt-get update && apt-get install -y ansible git
+ansible-pull -U <THIS_REPO_URL> -C main
 ```
 
 ## What Gets Installed
@@ -136,3 +151,11 @@ If you encounter issues:
 4. The server will automatically configure itself based on the playbook
 
 For any issues or feature requests, please open an issue in the repository.
+
+Troubleshooting
+
+    AWS Crashes: If the playbook fails on AWS:
+        Use a t3.small (2GB RAM) or larger instance—1GB may throttle during builds.
+        Ensure 20GB+ free storage (df -h).
+        Check security groups allow outbound HTTPS (port 443).
+        Run with -vvv for debug logs: ansible-pull -U <YOUR_REPO_URL> -C main -vvv > log.txt 2>&1.
