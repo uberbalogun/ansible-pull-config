@@ -10,19 +10,6 @@ This repository sets up a Rust development environment with Fish shell, Rust, Ne
 - **Network**: Open outbound access for repo and tool downloads
 
 ## Quick Start
-
-On a new server, run:
-
-```bash
-# Install required packages
-apt-get update && apt-get install -y ansible git
-
-# Run ansible-pull (replace with your repo URL)
-ansible-pull -U <YOUR_REPO_URL> -C main
-```
-
-
-## Quick Start
 On a fresh Linode or AWS Ubuntu/Debian server:
 ```bash
 apt-get update && apt-get install -y ansible git
