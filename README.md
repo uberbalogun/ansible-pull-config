@@ -85,7 +85,7 @@ Key features include:
 **Tmux Floax** (`Prefix + f`):
 - Creates floating terminal windows
 - Window dimensions: 85% height, 75% width
-- Perfect for quick commands or file viewing
+- Use it to run cargo check without leaving your editor or view logs while keeping your main workspace open, among other use cases
 
 **Session Management**:
 - Sessions are automatically saved every 15 minutes
