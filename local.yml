@@ -1,6 +1,6 @@
 ---
 - name: Configure server using ansible-pull
-  hosts: all
+  hosts: localhost
   connection: local
   become: true
 
